@@ -1,0 +1,45 @@
+# PHASE 1 MAIN TRACK
+# Google Cloud Platform Fundamentals
+# Getting started with Google Cloud platform
+
+# LAB: Getting started with compute Engine
+# STEP 1
+# create compute engine from web console
+
+   gcloud compute instance create my-vm-1 --zone=us-central1-a --machine-type "n1-standard-1" --image-project "debian-   cloud" --image "debian-9-stretch-v20200902"  --tags=http-server --subnet "default"
+
+# firewall rule
+   gcloud compute firewall-rules create allow-http --action=ALLOW --direction=INGRESS --rules=tcp:80 --source-   ranges=0.0.0.0/0 --target-tags=http-server
+
+STEP 2
+ # get zone list for us-central1
+   gcloud compute zones list | grep us-central1
+# create compute engine using gcloud command line interface
+
+   gcloud compute instances create "my-vm-2" --zone=us-central1-b --machine-type "n1-standard-1" --image-project "debian-   cloud" --image "debian-9-stretch-v20200902" --subnet "default"
+
+# ssh into my-vm-2
+   gcloud compute ssh my-vm-2
+
+# ping my-vm-1 
+   ping -c 4 my-vm-1
+
+#ssh into my-vm-1
+   ssh my-vm-1
+#install nginx server
+   sudo apt-get  update
+   sudo apt-get install nginx-light –y
+# open nano to add message
+   sudo nano /var/www/html/index.nginx-debian.html
+
+# TO SHOW html SOURCE OF WEBSERVER HOME PAGE
+   curl http://localhost/
+
+#go to my-vm-2
+   ssh my-vm-2
+#To see my-vm-1 home page and confirm my-vm-2 can reach my-vm-1
+   curl http://my-vm-1/
+
+
+
+

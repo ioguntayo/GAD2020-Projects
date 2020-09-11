@@ -1,0 +1,42 @@
+# Getting started with Cloud storage and Cloud SQL
+
+# Task 1
+# Deploy web server vm instance
+   gcloud compute instance create bloghost--zone=us-central1-a --machine-type=e2-medium --subnet=default --   metadata=startup-script=apt-get\ update$'\n'apt-get\ install\ apache2\ php\ php-mysql\ -y$'\n'service\ apache2\ restart    --tags=http-server --image=debian-9-stretch-v20200902 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-   type=pd-standard --boot-disk-device-name=bloghost
+
+# create firewall rule
+   gcloud compute create firewall-rules create default-allow-http --direction=INGRESS--action=ALLOW --rules=tcp:80 --   source-ranges=0.0.0.0/0 --target-tags=http-server
+
+# Task 2
+# create cloud storage bucket
+
+# export location
+   Export LOCATION=US
+# make a bucket
+   gsutil mb -l $LOCATION gs://$DEVSHELL_PROJECT_ID
+
+# retrieve an image form a cloud bucket
+   gsutil cp gs://cloud-training/gcpfci/my-excellent-blog.png my-excellent-blog.png
+#copy the image to my bucket
+   gsutil cp my-excellent-blog.png gs://$DEVSHELL_PROJECT_ID/my-excellent-blog.png
+
+Task 3
+# Configure an application in a Compute Engine instance to use Cloud SQL
+   cd /var/www/html
+# Create a file named index.php
+   sudo nano index.php
+#copy and paste the commands below into the index.php file
+   html> <head><title>Welcome to my excellent blog</title></head> <body> <h1>Welcome to my excellent blog</h1> <?php    $dbserver = "CLOUDSQLIP"; $dbuser = "blogdbuser"; $dbpassword = "DBPASSWORD"; // In a production blog, we would not    store the MySQL // password in the document root. Instead, we would store it in a // configuration file elsewhere on the    web server VM instance. $conn = new mysqli($dbserver, $dbuser, $dbpassword); if (mysqli_connect_error()) { echo    ("Database connection failed: " . mysqli_connect_error()); } else { echo ("Database connection succeeded."); } ?>    </body></html>
+
+   sudo service apache2 restart
+#the index.php would be edited for SQL IP address and DB password
+
+Task 4
+# Set working directory to document root of webserver
+   cd /var/www/html
+# place the image link
+
+# Restart apache2
+   sudo service apache2 restart
+
+
